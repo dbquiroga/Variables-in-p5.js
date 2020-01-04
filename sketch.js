@@ -26,6 +26,7 @@
     
     // inicial status of element when they dont move
     var movingElement = null;
+
     // esto identifica cuando se esta dentro del area del triangulo
     function trianCollision(px, py, x1, y1, x2, y2, x3, y3) {
 
@@ -46,14 +47,15 @@
         return false;
     }
 
-     // esto identifica cuando se esta dentro del area del circulo
-     function ellipseCollision(mouseX, mouseY, x, y, diameter) {
-        // calcular si la posicion del mouse cae dentro del area del circulo que le llega como parametro (x, y, diameter)
-        if (ellipse) {
+    // esto identifica cuando se esta dentro del area del circulo
+    function elipseCollision(pX, pY, x, y, diameter) {
+        let d = dist(pX, pY, x, y);
+        if (d < (diameter/2)) {
             return true;
         }
         return false;
     }
+
 
 
     // eso define la posicion del triangulo con relleno que se mueve (x, y, diametro)
@@ -64,13 +66,16 @@
     function setup() {
         createCanvas(600, 400);
     }
+    //----- aca termina setup
 
+    // esto es para mover los objetos
     function mousePressed() {
         if (trianCollision(mouseX, mouseY, positionTMove.x1, positionTMove.y1, positionTMove.x2, positionTMove.y2, positionTMove.x3, positionTMove.y3)) {
         movingElement = 'triang';
         }
     }
 
+    // esto es para mover los objetos
     function mouseDragged() {
         if (movingElement == 'triang') {
             positionTMove = calculatePositionTriang(mouseX, mouseY)
@@ -83,14 +88,11 @@
     }
 
     function mouseMoved() {
-        // posicion del triangulo (ahora para cambiar el cursor)
-        if (trianCollision(mouseX, mouseY, positionTMove.x1, positionTMove.y1, positionTMove.x2, positionTMove.y2, positionTMove.x3, positionTMove.y3)) {
-            hoverElement();
-        } else {
-            cursor();
-        }
-        // posicion del circulo (ahora para cambiar el cursor)
-        if (elipseCollision(mouseX, mouseY, positionElips.x, positionElips.y, positionElips.diameter)) {
+        // posicion del triangulo y del circulo (para cambiar el cursor)
+        // console.log('entro a mouse moved')
+        const isTrianCollision = trianCollision(mouseX, mouseY, positionTMove.x1, positionTMove.y1, positionTMove.x2, positionTMove.y2, positionTMove.x3, positionTMove.y3);
+        const isElipseCollision = elipseCollision(mouseX, mouseY, positionElips.x + 250, positionElips.y, positionElips.diameter);
+        if (isTrianCollision || isElipseCollision) {
             hoverElement();
         } else {
             cursor();
